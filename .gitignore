@@ -1,0 +1,67 @@
+# Environment files
+.env
+.env.local
+.env.*.local
+.env.example
+
+# Binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+bank-api
+bank-api.exe
+
+# Keys and secrets
+*.key
+*.pem
+*.pgp
+private.key
+public.key
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.bak
+*.cache
+tmp/
+temp/
+
+# Go workspace
+go.work
+go.work.sum
+
+# Dependency directories
+vendor/
+
+# Output of go build
+/bin/
+/dist/
+/build
+
+# Coverage files
+*.out
+*.cov
+coverage.html
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3

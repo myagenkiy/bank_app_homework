@@ -1,0 +1,309 @@
+### ============================================
+### ПОЛНЫЙ ТЕСТ БАНКОВСКОГО API
+### ============================================
+### ИНСТРУКЦИЯ:
+### 1. Запустите сервер: go run cmd/main.go
+### 2. Выполняйте запросы ПО ПОРЯДКУ
+### 3. После логина скопируйте ТОКЕН и вставьте вместо TOKEN
+### 4. После получения счетов скопируйте ID и вставьте вместо {ACCOUNT_ID}
+### 5. После получения кредита скопируйте ID и вставьте вместо {CREDIT_ID}
+
+### ============================================
+### 1. ПРОВЕРКА ЗДОРОВЬЯ
+### ============================================
+GET http://localhost:8080/health
+
+### ============================================
+### 2. АУТЕНТИФИКАЦИЯ
+### ============================================
+
+### 2.1 Регистрация пользователя
+POST http://localhost:8080/api/register
+Content-Type: application/json
+
+{
+    "email": "test@example.com",
+    "username": "testuser",
+    "password": "123456"
+}
+
+### 2.2 Логин (скопируйте token из ответа)
+POST http://localhost:8080/api/login
+Content-Type: application/json
+
+{
+    "email": "test@example.com",
+    "password": "123456"
+}
+
+### ============================================
+### 3. УПРАВЛЕНИЕ СЧЕТАМИ
+### ============================================
+
+### 3.1 Создать RUB счет
+POST http://localhost:8080/api/accounts
+Authorization: Bearer TOKEN
+Content-Type: application/json
+
+{
+    "currency": "RUB"
+}
+
+### 3.2 Создать USD счет
+POST http://localhost:8080/api/accounts
+Authorization: Bearer TOKEN
+Content-Type: application/json
+
+{
+    "currency": "USD"
+}
+
+### 3.3 Создать EUR счет
+POST http://localhost:8080/api/accounts
+Authorization: Bearer TOKEN
+Content-Type: application/json
+
+{
+    "currency": "EUR"
+}
+
+### 3.4 Получить все счета (скопируйте ID счетов)
+GET http://localhost:8080/api/accounts
+Authorization: Bearer TOKEN
+
+### ============================================
+### 4. ОПЕРАЦИИ СО СЧЕТАМИ
+### ============================================
+
+### 4.1 Пополнить RUB счет
+POST http://localhost:8080/api/deposit
+Authorization: Bearer TOKEN
+Content-Type: application/json
+
+{
+    "account_id": "RUB_ACCOUNT_ID",
+    "amount": 10000,
+    "description": "Пополнение через терминал"
+}
+
+### 4.2 Пополнить USD счет
+POST http://localhost:8080/api/deposit
+Authorization: Bearer TOKEN
+Content-Type: application/json
+
+{
+    "account_id": "USD_ACCOUNT_ID",
+    "amount": 500,
+    "description": "Пополнение USD"
+}
+
+### 4.3 Проверить баланс после пополнения
+GET http://localhost:8080/api/accounts
+Authorization: Bearer TOKEN
+
+### 4.4 Снять деньги с RUB счета
+POST http://localhost:8080/api/withdraw
+Authorization: Bearer TOKEN
+Content-Type: application/json
+
+{
+    "account_id": "RUB_ACCOUNT_ID",
+    "amount": 500,
+    "description": "Снятие в банкомате"
+}
+
+### ============================================
+### 5. ПЕРЕВОДЫ
+### ============================================
+
+### 5.1 Перевод RUB -> USD
+POST http://localhost:8080/api/transfer
+Authorization: Bearer TOKEN
+Content-Type: application/json
+
+{
+    "from_account_id": "RUB_ACCOUNT_ID",
+    "to_account_id": "USD_ACCOUNT_ID",
+    "amount": 2000,
+    "description": "Конвертация RUB в USD"
+}
+
+### 5.2 Перевод RUB -> EUR
+POST http://localhost:8080/api/transfer
+Authorization: Bearer TOKEN
+Content-Type: application/json
+
+{
+    "from_account_id": "RUB_ACCOUNT_ID",
+    "to_account_id": "EUR_ACCOUNT_ID",
+    "amount": 1000,
+    "description": "Конвертация RUB в EUR"
+}
+
+### ============================================
+### 6. ИСТОРИЯ ТРАНЗАКЦИЙ
+### ============================================
+
+### 6.1 История RUB счета
+GET http://localhost:8080/api/transactions/RUB_ACCOUNT_I
+Authorization: Bearer TOKEN
+
+### 6.2 История USD счета
+GET http://localhost:8080/api/transactions/USD_ACCOUNT_ID
+Authorization: Bearer TOKEN
+
+### ============================================
+### 7. КАРТЫ
+### ============================================
+
+### 7.1 Создать карту для RUB счета
+POST http://localhost:8080/api/cards
+Authorization: Bearer TOKEN
+Content-Type: application/json
+
+{
+    "account_id": "RUB_ACCOUNT_ID"
+}
+
+### 7.2 Получить все карты RUB счета
+GET http://localhost:8080/api/cards?account_id=RUB_ACCOUNT_I
+Authorization: Bearer TOKEN
+
+### 7.3 Создать карту для USD счета
+POST http://localhost:8080/api/cards
+Authorization: Bearer TOKEN
+Content-Type: application/json
+
+{
+    "account_id": "USD_ACCOUNT_ID"
+}
+
+### ============================================
+### 8. КРЕДИТЫ
+### ============================================
+
+### 8.1 Оформить кредит 50000 руб на 6 месяцев под 15%
+POST http://localhost:8080/api/credits/apply
+Authorization: Bearer TOKEN
+Content-Type: application/json
+
+{
+    "amount": 50000,
+    "interest_rate": 15,
+    "months": 6
+}
+
+### 8.2 Оформить кредит 100000 руб на 12 месяцев под 12%
+POST http://localhost:8080/api/credits/apply
+Authorization: Bearer TOKEN
+Content-Type: application/json
+
+{
+    "amount": 100000,
+    "interest_rate": 12,
+    "months": 12
+}
+
+### 8.3 Получить график платежей (вставьте CREDIT_ID из ответа)
+GET http://localhost:8080/api/credits/{CREDIT_ID}/schedule
+Authorization: Bearer TOKEN
+
+### ============================================
+### 9. АНАЛИТИКА
+### ============================================
+
+### 9.1 Дашборд аналитики
+GET http://localhost:8080/api/analytics/dashboard
+Authorization: Bearer TOKEN
+
+### 9.2 Кредитная нагрузка
+GET http://localhost:8080/api/analytics/credit-burden
+Authorization: Bearer TOKEN
+
+### 9.3 Прогноз баланса на 30 дней
+GET http://localhost:8080/api/accounts/RUB_ACCOUNT_I/predict?days=30
+Authorization: Bearer TOKEN
+
+### 9.4 Прогноз баланса на 90 дней
+GET http://localhost:8080/api/accounts/RUB_ACCOUNT_I/predict?days=90
+Authorization: Bearer TOKEN
+
+### ============================================
+### 10. ИНТЕГРАЦИИ
+### ============================================
+
+### 10.1 Ключевая ставка ЦБ РФ (SOAP)
+GET http://localhost:8080/api/central-bank/rate
+Authorization: Bearer TOKEN
+
+### 10.2 Тест email уведомления (SMTP)
+POST http://localhost:8080/api/email/test
+Authorization: Bearer TOKEN
+Content-Type: application/json
+
+{}
+
+### ============================================
+### 11. ТЕСТЫ ОШИБОК
+### ============================================
+
+### 11.1 Попытка создать счет без токена (401)
+POST http://localhost:8080/api/accounts
+Content-Type: application/json
+
+{"currency": "RUB"}
+
+### 11.2 Попытка перевести больше чем есть (400)
+POST http://localhost:8080/api/transfer
+Authorization: Bearer TOKEN
+Content-Type: application/json
+
+{
+    "from_account_id": "RUB_ACCOUNT_ID",
+    "to_account_id": "USD_ACCOUNT_ID",
+    "amount": 999999,
+    "description": "Сумма больше баланса"
+}
+
+### 11.3 Попытка снять больше чем есть (400)
+POST http://localhost:8080/api/withdraw
+Authorization: Bearer TOKEN
+Content-Type: application/json
+
+{
+    "account_id": "RUB_ACCOUNT_ID",
+    "amount": 999999,
+    "description": "Снятие больше баланса"
+}
+
+### 11.4 Попытка перевода на несуществующий счет (404)
+POST http://localhost:8080/api/transfer
+Authorization: Bearer TOKEN
+Content-Type: application/json
+
+{
+    "from_account_id": "RUB_ACCOUNT_ID",
+    "to_account_id": "00000000-0000-0000-0000-000000000000",
+    "amount": 100,
+    "description": "На несуществующий счет"
+}
+
+### 11.5 Попытка получить чужой счет (403)
+GET http://localhost:8080/api/accounts/chacun7vb-0000-0000-0000-000000000000
+Authorization: Bearer TOKEN
+
+### 11.6 Неверный токен (401)
+GET http://localhost:8080/api/accounts
+Authorization: Bearer invalid.token.here
+
+### ============================================
+### 12. ФИНАЛЬНАЯ ПРОВЕРКА
+### ============================================
+
+### 12.1 Итоговый баланс всех счетов
+GET http://localhost:8080/api/accounts
+Authorization: Bearer TOKEN
+
+### 12.2 Полная история всех транзакций
+GET http://localhost:8080/api/transactions/RUB_ACCOUNT_I
+Authorization: Bearer TOKEN
